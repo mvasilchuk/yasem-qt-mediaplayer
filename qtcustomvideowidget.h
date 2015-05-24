@@ -9,10 +9,6 @@ class QtCustomVideoWidget : public QVideoWidget
 public:
     explicit QtCustomVideoWidget(QWidget *parent = 0);
 
-signals:
-
-public slots:
-    void paintEvent(QPaintEvent *e);
 
 };
 

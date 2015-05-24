@@ -4,28 +4,30 @@
 #
 #-------------------------------------------------
 
-QT       += multimedia multimediawidgets opengl
-
-QT       -= gui
-
-CONFIG += C++11
-
-TARGET = QtMediaPlayer
+VERSION = 0.1.0
+TARGET = yasem-qt-mediaplayer
 TEMPLATE = lib
-CONFIG += plugin
+
+include($${top_srcdir}/common.pri)
+
+QT       += multimedia multimediawidgets opengl
+QT       -= gui
 
 DEFINES += QTMEDIAPLAYER_LIBRARY
 
-INCLUDEPATH += ../yasem-core \
-    ../vlc-qt/build/prefix/include/
+SOURCES += \
+    qtcustomvideowidget.cpp \
+    $${CORE_ROOT_DIR}/mediaplayerpluginobject.cpp \
+    qtplayerplugin.cpp \
+    qtmediaplayerobject.cpp
 
-SOURCES += qtmediaplayer.cpp \
-    qtcustomvideowidget.cpp
-
-HEADERS += qtmediaplayer.h\
-        qtmediaplayer_global.h \
-        qtcustomvideowidget.h \
-        ../yasem-core/mediasignalsender.h
+HEADERS +=\
+    qtmediaplayer_global.h \
+    qtcustomvideowidget.h \
+    $${CORE_ROOT_DIR}/mediaplayerpluginobject.h \
+    $${CORE_ROOT_DIR}/browserpluginobject.h \
+    qtplayerplugin.h \
+    qtmediaplayerobject.h
 
 #LIBS        += -L/home/max/Dropbox/projects/yasem/vlc-qt/build/prefix/lib/ -lvlc-qt -lvlc-qt-widgets
 
@@ -36,7 +38,4 @@ unix {
 
 OTHER_FILES += \
     metadata.json
-
-include(../common.pri)
-DESTDIR = $$DEFAULT_PLUGIN_DIR
 

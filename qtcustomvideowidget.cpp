@@ -14,9 +14,3 @@ QtCustomVideoWidget::QtCustomVideoWidget(QWidget *parent) :
 
 }
 
-void QtCustomVideoWidget::paintEvent(QPaintEvent *e)
-{
-    QVideoWidget::paintEvent(e);
-
-
-}
