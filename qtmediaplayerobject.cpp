@@ -256,71 +256,6 @@ void QtMediaPlayerObject::setViewport(const QRect &containerRect, const qreal co
     m_graphics_view->scene()->update(m_graphics_view->rect());
 }
 
-int QtMediaPlayerObject::audioPID()
-{
-    STUB();
-    return 0;
-}
-
-int QtMediaPlayerObject::bufferLoad()
-{
-    return mediaPlayer->bufferStatus();
-}
-
-qint64 QtMediaPlayerObject::position()
-{
-    return mediaPlayer->position();
-}
-
-void QtMediaPlayerObject::audioPID(int pid)
-{
-    //mediaPlayer->
-    STUB();
-}
-
-int QtMediaPlayerObject::loop()
-{
-    STUB();
-    return 0;
-}
-
-void QtMediaPlayerObject::loop(int loop)
-{
-    STUB();
-}
-
-bool QtMediaPlayerObject::mute()
-{
-   return mediaPlayer->isMuted();
-}
-
-void QtMediaPlayerObject::mute(bool value)
-{
-    mediaPlayer->setMuted(value);
-}
-
-void QtMediaPlayerObject::position(qint64 pos)
-{
-    mediaPlayer->setPosition(pos);
-}
-
-qint64 QtMediaPlayerObject::duration()
-{
-    return mediaPlayer->duration();
-}
-
-int QtMediaPlayerObject::getVolume()
-{
-   return mediaPlayer->volume();
-}
-
-void QtMediaPlayerObject::getVolume(int vol)
-{
-    mediaPlayer->setVolume(vol);
-}
-
-
-
 PluginObjectResult yasem::QtMediaPlayerObject::init()
 {
     STUB();
@@ -379,46 +314,49 @@ void yasem::QtMediaPlayerObject::setLoop(int loop)
 bool yasem::QtMediaPlayerObject::isMute() const
 {
     STUB();
-    return false;
+    return mediaPlayer->isMuted();
 }
 
 void yasem::QtMediaPlayerObject::setMute(bool value)
 {
     STUB();
+    mediaPlayer->setMuted(value);
 }
 
 int yasem::QtMediaPlayerObject::bufferLoad() const
 {
     STUB();
-    return 100;
+    return mediaPlayer->bufferStatus();
 }
 
 qint64 yasem::QtMediaPlayerObject::getPosition() const
 {
     STUB();
-    return 0;
+    return mediaPlayer->position();
 }
 
 void yasem::QtMediaPlayerObject::setPosition(qint64 pos)
 {
     STUB();
+    mediaPlayer->setPosition(pos);
 }
 
 qint64 yasem::QtMediaPlayerObject::getDuration() const
 {
     STUB();
-    return 0;
+    return mediaPlayer->duration();
 }
 
 int yasem::QtMediaPlayerObject::getVolume() const
 {
     STUB();
-    return 0;
+    return mediaPlayer->volume();
 }
 
 void yasem::QtMediaPlayerObject::setVolume(int vol)
 {
     STUB();
+    mediaPlayer->setVolume(vol);
 }
 
 bool yasem::QtMediaPlayerObject::isVisible() const

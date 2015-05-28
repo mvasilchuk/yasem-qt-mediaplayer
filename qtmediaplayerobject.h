@@ -72,24 +72,6 @@ public slots:
 public:
     void setOverlayWidget(QWidget *widget);
 
-    // MediaPlayerPlugin interface
-public:
-    int audioPID();
-    int bufferLoad();
-    qint64 position();
-    void position(qint64 pos);
-
-    qint64 duration();
-
-    void audioPID(int pid);
-    int loop();
-    void loop(int loop);
-    bool mute();
-    void mute(bool value);
-
-    int getVolume();
-    void getVolume(int vol);
-
 
     // AbstractPluginObject interface
 public:
