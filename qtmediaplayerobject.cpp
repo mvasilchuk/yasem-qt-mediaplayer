@@ -11,14 +11,20 @@
 using namespace yasem;
 
 QtMediaPlayerObject::QtMediaPlayerObject(Plugin* plugin):
-    MediaPlayerPluginObject(plugin)
+    MediaPlayerPluginObject(plugin),
+    mediaPlayer(NULL)
 {
     m_support_opengl = false;
 }
 
 QtMediaPlayerObject::~QtMediaPlayerObject()
 {
-    delete m_video_widget;
+    deinit();
+    if(mediaPlayer)
+    {
+        mediaPlayer->setParent(NULL);
+        mediaPlayer->deleteLater();
+    }
 }
 
 void QtMediaPlayerObject::parent(QWidget *parent)
