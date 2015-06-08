@@ -43,9 +43,6 @@ public:
     MediaPlayingState state();
     bool state(MediaPlayingState state);
 
-    virtual void aspectRatio(AspectRatio mode);
-    virtual AspectRatio aspectRatio();
-
     virtual void move(int x, int y);
     virtual void raise();
 
@@ -60,7 +57,7 @@ public slots:
     void durationChanged(qint64 duration);
     void positionChanged(qint64 position);
     void metaDataChanged(const QString &key, const QVariant &value);
-    void statusChanged(QMediaPlayer::MediaStatus status);
+    void onMediaStatusChanged(QMediaPlayer::MediaStatus status);
     void bufferingProgress(int bufferingProgress);
     void videoAvailableChanged(bool available);
     void displayErrorMessage(QMediaPlayer::Error error);

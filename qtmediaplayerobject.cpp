@@ -160,16 +160,6 @@ bool QtMediaPlayerObject::state(MediaPlayingState state)
     return true;
 }
 
-void QtMediaPlayerObject::aspectRatio(AspectRatio mode)
-{
-    Qt::AspectRatioMode arMode = Qt::KeepAspectRatioByExpanding;
-    //videoWidget->setAspectRatioMode(arMode);
-}
-
-AspectRatio QtMediaPlayerObject::aspectRatio()
-{
-    return ASPECT_RATIO_AUTO;
-}
 
 void QtMediaPlayerObject::move(int x, int y)
 {
@@ -196,14 +186,22 @@ void QtMediaPlayerObject::metaDataChanged(const QString &key, const QVariant &va
     STUB() << "Metadata changed:" << key << "=" << value;
 }
 
-void QtMediaPlayerObject::statusChanged(QMediaPlayer::MediaStatus status)
+void QtMediaPlayerObject::onMediaStatusChanged(QMediaPlayer::MediaStatus status)
 {
     STUB() << "Status changed:" << status;
 
     switch(status)
     {
         case QMediaPlayer::BufferingMedia:
+        {
+            emit statusChanged(BufferingMedia);
+            break;
+        }
         case QMediaPlayer::BufferedMedia:
+        {
+            emit statusChanged(BufferedMedia);
+            break;
+        }
         case QMediaPlayer::LoadedMedia:
         {
             emit started();
@@ -215,19 +213,23 @@ void QtMediaPlayerObject::statusChanged(QMediaPlayer::MediaStatus status)
             break;
         }
 
-        case QMediaPlayer::NoMedia:
-        //case QMediaPlayer::LoadingMedia:
-
+        case QMediaPlayer::NoMedia: {
+            emit statusChanged(NoMedia);
+            break;
+        }
         case QMediaPlayer::EndOfMedia:
+        {
+            emit statusChanged(EndOfMedia);
+            break;
+        }
         case QMediaPlayer::InvalidMedia:
         {
-            //emit mediaSignalSender.stopped();
+            emit statusChanged(InvalidMedia);
             break;
         }
         case QMediaPlayer::UnknownMediaStatus:
         default: {
-
-                break;
+            break;
         }
     }
 
@@ -271,8 +273,8 @@ PluginObjectResult yasem::QtMediaPlayerObject::init()
     mediaPlayer->setVideoOutput(m_video_widget);
     m_video_widget->show();
 
-    //m_scene = new QGraphicsScene(this);
     m_graphics_view = new QGraphicsView();
+    m_graphics_view->setStyleSheet("background: black");
     m_graphics_view->setRenderHints(QPainter::Antialiasing | QPainter::SmoothPixmapTransform);
     m_graphics_view->setHorizontalScrollBarPolicy(Qt::ScrollBarAlwaysOff);
     m_graphics_view->setVerticalScrollBarPolicy(Qt::ScrollBarAlwaysOff);
@@ -283,7 +285,7 @@ PluginObjectResult yasem::QtMediaPlayerObject::init()
     connect(mediaPlayer, &QMediaPlayer::durationChanged, this, &QtMediaPlayerObject::durationChanged);
     connect(mediaPlayer, &QMediaPlayer::positionChanged, this, &QtMediaPlayerObject::positionChanged);
     connect(mediaPlayer, SIGNAL(metaDataChanged(const QString &, const QVariant &)), this, SLOT(metaDataChanged(const QString &, const QVariant &)));
-    connect(mediaPlayer, &QMediaPlayer::mediaStatusChanged, this, &QtMediaPlayerObject::statusChanged);
+    connect(mediaPlayer, &QMediaPlayer::mediaStatusChanged, this, &QtMediaPlayerObject::onMediaStatusChanged);
     connect(mediaPlayer, &QMediaPlayer::bufferStatusChanged, this, &QtMediaPlayerObject::bufferingProgress);
     connect(mediaPlayer, &QMediaPlayer::videoAvailableChanged, this, &QtMediaPlayerObject::videoAvailableChanged);
     connect(mediaPlayer, SIGNAL(error(QMediaPlayer::Error error)), SLOT(displayErrorMessage(QMediaPlayer::Error error)));
