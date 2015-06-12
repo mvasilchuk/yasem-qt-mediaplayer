@@ -271,7 +271,6 @@ PluginObjectResult yasem::QtMediaPlayerObject::init()
     m_video_widget = new QGraphicsVideoItem();
     m_video_widget->setAspectRatioMode(Qt::KeepAspectRatio);
     mediaPlayer->setVideoOutput(m_video_widget);
-    m_video_widget->show();
 
     m_graphics_view = new QGraphicsView();
     m_graphics_view->setStyleSheet("background: black");
@@ -280,7 +279,6 @@ PluginObjectResult yasem::QtMediaPlayerObject::init()
     m_graphics_view->setVerticalScrollBarPolicy(Qt::ScrollBarAlwaysOff);
     m_graphics_view->setScene(new QGraphicsScene());
     m_graphics_view->scene()->addItem(m_video_widget);
-    m_graphics_view->show();
 
     connect(mediaPlayer, &QMediaPlayer::durationChanged, this, &QtMediaPlayerObject::durationChanged);
     connect(mediaPlayer, &QMediaPlayer::positionChanged, this, &QtMediaPlayerObject::positionChanged);
