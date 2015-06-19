@@ -102,7 +102,6 @@ public:
     int getSaturation() const;
     MediaMetadata getMediaMetadata();
     QPoint getWidgetPos() const;
-    QPixmap &render();
 };
 
 }

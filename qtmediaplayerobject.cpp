@@ -435,8 +435,3 @@ QPoint yasem::QtMediaPlayerObject::getWidgetPos() const
 {
     return QPoint();
 }
-
-QPixmap &yasem::QtMediaPlayerObject::render()
-{
-    //return NULL;
-}
