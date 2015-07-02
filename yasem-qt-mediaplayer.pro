@@ -17,15 +17,12 @@ DEFINES += QTMEDIAPLAYER_LIBRARY
 
 SOURCES += \
     qtcustomvideowidget.cpp \
-    $${CORE_ROOT_DIR}/mediaplayerpluginobject.cpp \
     qtplayerplugin.cpp \
     qtmediaplayerobject.cpp
 
 HEADERS +=\
     qtmediaplayer_global.h \
     qtcustomvideowidget.h \
-    $${CORE_ROOT_DIR}/mediaplayerpluginobject.h \
-    $${CORE_ROOT_DIR}/browserpluginobject.h \
     qtplayerplugin.h \
     qtmediaplayerobject.h
 
