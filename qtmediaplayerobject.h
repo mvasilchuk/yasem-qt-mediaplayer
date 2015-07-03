@@ -13,11 +13,11 @@
 namespace yasem
 {
 
-class QtMediaPlayerObject: public MediaPlayerPluginObject
+class QtMediaPlayerObject: public SDK::MediaPlayerPluginObject
 {
     Q_OBJECT
 public:
-    explicit QtMediaPlayerObject(Plugin* plugin);
+    explicit QtMediaPlayerObject(SDK::Plugin* plugin);
     virtual ~QtMediaPlayerObject();
 
     // MediaPlayerPlugin interface
@@ -40,8 +40,8 @@ public:
     virtual QRect rect() const;
     virtual bool isVisible();
 
-    MediaPlayingState state();
-    bool state(MediaPlayingState state);
+    SDK::MediaPlayingState state();
+    bool state(SDK::MediaPlayingState state);
 
     virtual void move(int x, int y);
     virtual void raise();
@@ -50,7 +50,7 @@ protected:
     QMediaPlaylist *playList;
     QGraphicsVideoItem* m_video_widget;
     QMediaPlayer *mediaPlayer;
-    MediaPlayingState playerState;
+    SDK::MediaPlayingState playerState;
     QGraphicsView *m_graphics_view;
 
 public slots:
@@ -72,8 +72,8 @@ public:
 
     // AbstractPluginObject interface
 public:
-    PluginObjectResult init();
-    PluginObjectResult deinit();
+    SDK::PluginObjectResult init();
+    SDK::PluginObjectResult deinit();
 
     // MediaPlayerPluginObject interface
 public:
@@ -90,8 +90,8 @@ public:
     int getVolume() const;
     void setVolume(int vol);
     bool isVisible() const;
-    void setAspectRatio(AspectRatio mode);
-    AspectRatio getAspectRatio();
+    void setAspectRatio(SDK::AspectRatio mode);
+    SDK::AspectRatio getAspectRatio();
     QList<AudioLangInfo> getAudioLanguages();
     void setAudioLanguage(int index);
     void setBrightness(int brightness);

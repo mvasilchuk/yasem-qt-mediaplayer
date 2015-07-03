@@ -10,8 +10,8 @@
 
 using namespace yasem;
 
-QtMediaPlayerObject::QtMediaPlayerObject(Plugin* plugin):
-    MediaPlayerPluginObject(plugin),
+QtMediaPlayerObject::QtMediaPlayerObject(SDK::Plugin* plugin):
+    SDK::MediaPlayerPluginObject(plugin),
     mediaPlayer(NULL)
 {
     m_support_opengl = false;
@@ -73,7 +73,7 @@ bool QtMediaPlayerObject::mediaContinue()
 {
     STUB();
     mediaPlayer->play();
-    state(PlayingState);
+    state(SDK::PlayingState);
     return true;
 }
 
@@ -81,7 +81,7 @@ bool QtMediaPlayerObject::mediaPause()
 {
     STUB();
     mediaPlayer->pause();
-    state(PausedState);
+    state(SDK::PausedState);
     return true;
 }
 
@@ -89,7 +89,7 @@ bool QtMediaPlayerObject::mediaStop()
 {
     STUB();
     mediaPlayer->stop();
-    state(StoppedState);
+    state(SDK::StoppedState);
     return true;
 }
 
@@ -130,27 +130,27 @@ bool QtMediaPlayerObject::isVisible()
     return widget()->isVisible();
 }
 
-MediaPlayingState QtMediaPlayerObject::state()
+SDK::MediaPlayingState QtMediaPlayerObject::state()
 {
     return playerState;
 }
 
-bool QtMediaPlayerObject::state(MediaPlayingState state)
+bool QtMediaPlayerObject::state(SDK::MediaPlayingState state)
 {
     this->playerState = state;
     switch(state)
     {
-        case PlayingState:
+        case SDK::PlayingState:
         {
             emit started();
             break;
         }
-        case PausedState:
+        case SDK::PausedState:
         {
             emit paused(true);
             break;
         }
-        case StoppedState:
+        case SDK::StoppedState:
         {
             //emit mediaSignalSender.stopped();
             break;
@@ -194,12 +194,12 @@ void QtMediaPlayerObject::onMediaStatusChanged(QMediaPlayer::MediaStatus status)
     {
         case QMediaPlayer::BufferingMedia:
         {
-            emit statusChanged(BufferingMedia);
+            emit statusChanged(SDK::BufferingMedia);
             break;
         }
         case QMediaPlayer::BufferedMedia:
         {
-            emit statusChanged(BufferedMedia);
+            emit statusChanged(SDK::BufferedMedia);
             break;
         }
         case QMediaPlayer::LoadedMedia:
@@ -214,17 +214,17 @@ void QtMediaPlayerObject::onMediaStatusChanged(QMediaPlayer::MediaStatus status)
         }
 
         case QMediaPlayer::NoMedia: {
-            emit statusChanged(NoMedia);
+            emit statusChanged(SDK::NoMedia);
             break;
         }
         case QMediaPlayer::EndOfMedia:
         {
-            emit statusChanged(EndOfMedia);
+            emit statusChanged(SDK::EndOfMedia);
             break;
         }
         case QMediaPlayer::InvalidMedia:
         {
-            emit statusChanged(InvalidMedia);
+            emit statusChanged(SDK::InvalidMedia);
             break;
         }
         case QMediaPlayer::UnknownMediaStatus:
@@ -264,7 +264,7 @@ void QtMediaPlayerObject::setViewport(const QRect &containerRect, const qreal co
     m_graphics_view->scene()->update(m_graphics_view->rect());
 }
 
-PluginObjectResult yasem::QtMediaPlayerObject::init()
+SDK::PluginObjectResult yasem::QtMediaPlayerObject::init()
 {
     STUB();
     mediaPlayer = new QMediaPlayer(this, QMediaPlayer::VideoSurface);
@@ -280,6 +280,8 @@ PluginObjectResult yasem::QtMediaPlayerObject::init()
     m_graphics_view->setScene(new QGraphicsScene());
     m_graphics_view->scene()->addItem(m_video_widget);
 
+    hide();
+
     connect(mediaPlayer, &QMediaPlayer::durationChanged, this, &QtMediaPlayerObject::durationChanged);
     connect(mediaPlayer, &QMediaPlayer::positionChanged, this, &QtMediaPlayerObject::positionChanged);
     connect(mediaPlayer, SIGNAL(metaDataChanged(const QString &, const QVariant &)), this, SLOT(metaDataChanged(const QString &, const QVariant &)));
@@ -287,12 +289,12 @@ PluginObjectResult yasem::QtMediaPlayerObject::init()
     connect(mediaPlayer, &QMediaPlayer::bufferStatusChanged, this, &QtMediaPlayerObject::bufferingProgress);
     connect(mediaPlayer, &QMediaPlayer::videoAvailableChanged, this, &QtMediaPlayerObject::videoAvailableChanged);
     connect(mediaPlayer, SIGNAL(error(QMediaPlayer::Error error)), SLOT(displayErrorMessage(QMediaPlayer::Error error)));
-    return PLUGIN_OBJECT_RESULT_OK;
+    return SDK::PLUGIN_OBJECT_RESULT_OK;
 }
 
-PluginObjectResult yasem::QtMediaPlayerObject::deinit()
+SDK::PluginObjectResult yasem::QtMediaPlayerObject::deinit()
 {
-    return PLUGIN_OBJECT_RESULT_OK;
+    return SDK::PLUGIN_OBJECT_RESULT_OK;
 }
 
 int yasem::QtMediaPlayerObject::getAudioPID() const
@@ -371,15 +373,15 @@ bool yasem::QtMediaPlayerObject::isVisible() const
     return true;
 }
 
-void yasem::QtMediaPlayerObject::setAspectRatio(AspectRatio mode)
+void yasem::QtMediaPlayerObject::setAspectRatio(SDK::AspectRatio mode)
 {
     STUB();
 }
 
-AspectRatio yasem::QtMediaPlayerObject::getAspectRatio()
+SDK::AspectRatio yasem::QtMediaPlayerObject::getAspectRatio()
 {
     STUB();
-    return ASPECT_RATIO_AUTO;
+    return SDK::ASPECT_RATIO_AUTO;
 }
 
 QList<AudioLangInfo> yasem::QtMediaPlayerObject::getAudioLanguages()

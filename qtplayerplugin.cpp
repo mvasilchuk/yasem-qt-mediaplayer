@@ -4,7 +4,7 @@
 using namespace yasem;
 
 QtPlayerPlugin::QtPlayerPlugin(QObject* parent):
-    Plugin(parent)
+    SDK::Plugin(parent)
 {
 
 }
@@ -21,5 +21,5 @@ void QtPlayerPlugin::register_dependencies()
 
 void QtPlayerPlugin::register_roles()
 {
-    register_role(ROLE_MEDIA, new QtMediaPlayerObject(this));
+    register_role(SDK::ROLE_MEDIA, new QtMediaPlayerObject(this));
 }
