@@ -11,7 +11,7 @@
 using namespace yasem;
 
 QtMediaPlayerObject::QtMediaPlayerObject(SDK::Plugin* plugin):
-    SDK::MediaPlayerPluginObject(plugin),
+    SDK::MediaPlayer(plugin),
     mediaPlayer(NULL)
 {
     m_support_opengl = false;
@@ -184,6 +184,7 @@ void QtMediaPlayerObject::positionChanged(qint64 position)
 void QtMediaPlayerObject::metaDataChanged(const QString &key, const QVariant &value)
 {
     STUB() << "Metadata changed:" << key << "=" << value;
+    emit statusChanged(SDK::VideoInfoReceived);
 }
 
 void QtMediaPlayerObject::onMediaStatusChanged(QMediaPlayer::MediaStatus status)
@@ -254,13 +255,13 @@ void QtMediaPlayerObject::displayErrorMessage(QMediaPlayer::Error error)
 
 void QtMediaPlayerObject::setViewport(const QRect &requestedRect)
 {
-    MediaPlayerPluginObject::setViewport(requestedRect);
+    MediaPlayer::setViewport(requestedRect);
     m_graphics_view->scene()->update(m_graphics_view->rect());
 }
 
 void QtMediaPlayerObject::setViewport(const QRect &containerRect, const qreal containerScale, const QRect &requestedRect)
 {
-    MediaPlayerPluginObject::setViewport(containerRect, containerScale, requestedRect);
+    MediaPlayer::setViewport(containerRect, containerScale, requestedRect);
     m_graphics_view->scene()->update(m_graphics_view->rect());
 }
 
@@ -300,6 +301,7 @@ SDK::PluginObjectResult yasem::QtMediaPlayerObject::deinit()
 int yasem::QtMediaPlayerObject::getAudioPID() const
 {
     STUB();
+
     return 0;
 }
 

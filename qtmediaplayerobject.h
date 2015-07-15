@@ -2,7 +2,7 @@
 #define QTMEDIAPLAYER_H
 
 #include "macros.h"
-#include "mediaplayerpluginobject.h"
+#include "mediaplayer.h"
 #include "qtcustomvideowidget.h"
 
 #include <QMediaPlayer>
@@ -13,7 +13,7 @@
 namespace yasem
 {
 
-class QtMediaPlayerObject: public SDK::MediaPlayerPluginObject
+class QtMediaPlayerObject: public SDK::MediaPlayer
 {
     Q_OBJECT
 public:
