@@ -53,13 +53,14 @@ protected:
     SDK::MediaPlayingState playerState;
     QGraphicsView *m_graphics_view;
 
-public slots:
+protected slots:
     void durationChanged(qint64 duration);
     void positionChanged(qint64 position);
     void metaDataChanged(const QString &key, const QVariant &value);
     void onMediaStatusChanged(QMediaPlayer::MediaStatus status);
     void bufferingProgress(int bufferingProgress);
     void videoAvailableChanged(bool available);
+    void availabilityChanged(QMultimedia::AvailabilityStatus availability);
     void displayErrorMessage(QMediaPlayer::Error error);
 
     virtual void setViewport(const QRect &requestedRect);

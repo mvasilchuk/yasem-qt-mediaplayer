@@ -55,6 +55,8 @@ bool QtMediaPlayerObject::mediaPlay(const QString &url)
     STUB();
     LOG() << url;
 
+    m_media_info = MediaInfo();
+
     QString newUrl(url);
     if(newUrl.startsWith("/"))
         newUrl = QString("file://").append(newUrl);
@@ -63,10 +65,13 @@ bool QtMediaPlayerObject::mediaPlay(const QString &url)
 
     playList = new QMediaPlaylist();
     playList->addMedia(QMediaContent(QUrl(newUrl)));
+    playList->setCurrentIndex(1);
     mediaPlayer->setPlaylist(playList);
     mediaPlayer->setVolume(50);
 
-    return mediaContinue();
+    mediaPlayer->play();
+    state(SDK::PlayingState);
+    return true;
 }
 
 bool QtMediaPlayerObject::mediaContinue()
@@ -152,7 +157,7 @@ bool QtMediaPlayerObject::state(SDK::MediaPlayingState state)
         }
         case SDK::StoppedState:
         {
-            //emit mediaSignalSender.stopped();
+            emit stopped();
             break;
         }
     }
@@ -184,7 +189,38 @@ void QtMediaPlayerObject::positionChanged(qint64 position)
 void QtMediaPlayerObject::metaDataChanged(const QString &key, const QVariant &value)
 {
     STUB() << "Metadata changed:" << key << "=" << value;
-    emit statusChanged(SDK::VideoInfoReceived);
+
+    if(key == "VideoCodec")
+    {
+        m_media_info.video_codec = value.toString();
+        emit statusChanged(SDK::VideoInfoReceived);
+    }
+    else if(key == "AudioCodec")
+    {
+        m_media_info.audio_codec = value.toString();
+        if(!m_media_info.video_codec.isEmpty())
+            emit statusChanged(SDK::MediaInfoReceived);
+    }
+    else if(key == "Language")
+        m_media_info.language = value.toString();
+    else if(key == "container-format")
+        m_media_info.container = value.toString();
+    else if(key == "PixelAspectRatio")
+        m_media_info.pixel_ratio = value.toSize();
+    else if(key == "Resolution")
+        m_media_info.resolution = value.toSize();
+    else if(key == "maximum-bitrate")
+        m_media_info.max_bitrate = value.toUInt();
+    else if(key == "minimum-bitrate")
+        m_media_info.min_bitrate = value.toUInt();
+    else if(key == "AudioBitRate")
+        m_media_info.audio_bitrate = value.toUInt();
+    else if(key == "ContributingArtist")
+        m_media_info.contributing_artist = value.toString();
+    else if(key == "Title")
+        m_media_info.title = value.toString();
+    else if(key == "encoder")
+        m_media_info.encoder = value.toString();
 }
 
 void QtMediaPlayerObject::onMediaStatusChanged(QMediaPlayer::MediaStatus status)
@@ -205,7 +241,6 @@ void QtMediaPlayerObject::onMediaStatusChanged(QMediaPlayer::MediaStatus status)
         }
         case QMediaPlayer::LoadedMedia:
         {
-            emit started();
             break;
         }
         case QMediaPlayer::StalledMedia:
@@ -245,6 +280,36 @@ void QtMediaPlayerObject::bufferingProgress(int bufferingProgress)
 void QtMediaPlayerObject::videoAvailableChanged(bool available)
 {
     STUB() << "Video available:" << available;
+    if(available)
+        emit started();
+}
+
+void QtMediaPlayerObject::availabilityChanged(QMultimedia::AvailabilityStatus availability)
+{
+    STUB() << availability;
+    switch(availability)
+    {
+        case QMultimedia::Available: {
+            emit errorHappened(MediaPlayer::MEDIA_ERROR_NO_ERROR);
+            break;
+        }
+        case QMultimedia::ServiceMissing: {
+            emit errorHappened(MediaPlayer::MEDIA_ERROR_SERVICE_MISSING);
+            break;
+        }
+        case QMultimedia::ResourceError: {
+            emit errorHappened(MediaPlayer::MEDIA_ERROR_RESOURCE_ERROR);
+            break;
+        }
+        case QMultimedia::Busy: {
+            emit errorHappened(MediaPlayer::MEDIA_ERROR_RESOURCE_BUSY);
+            break;
+        }
+        default: {
+            WARN() << "Unknown availability status" << availability;
+            break;
+        }
+    }
 }
 
 void QtMediaPlayerObject::displayErrorMessage(QMediaPlayer::Error error)
@@ -255,12 +320,14 @@ void QtMediaPlayerObject::displayErrorMessage(QMediaPlayer::Error error)
 
 void QtMediaPlayerObject::setViewport(const QRect &requestedRect)
 {
+    STUB() << requestedRect;
     MediaPlayer::setViewport(requestedRect);
     m_graphics_view->scene()->update(m_graphics_view->rect());
 }
 
 void QtMediaPlayerObject::setViewport(const QRect &containerRect, const qreal containerScale, const QRect &requestedRect)
 {
+    STUB() << containerRect << containerScale << requestedRect;
     MediaPlayer::setViewport(containerRect, containerScale, requestedRect);
     m_graphics_view->scene()->update(m_graphics_view->rect());
 }
@@ -274,22 +341,32 @@ SDK::PluginObjectResult yasem::QtMediaPlayerObject::init()
     mediaPlayer->setVideoOutput(m_video_widget);
 
     m_graphics_view = new QGraphicsView();
-    m_graphics_view->setStyleSheet("background: black");
+    //m_graphics_view->setStyleSheet("background: black");
     m_graphics_view->setRenderHints(QPainter::Antialiasing | QPainter::SmoothPixmapTransform);
     m_graphics_view->setHorizontalScrollBarPolicy(Qt::ScrollBarAlwaysOff);
     m_graphics_view->setVerticalScrollBarPolicy(Qt::ScrollBarAlwaysOff);
     m_graphics_view->setScene(new QGraphicsScene());
     m_graphics_view->scene()->addItem(m_video_widget);
 
-    hide();
+    //hide();
 
-    connect(mediaPlayer, &QMediaPlayer::durationChanged, this, &QtMediaPlayerObject::durationChanged);
-    connect(mediaPlayer, &QMediaPlayer::positionChanged, this, &QtMediaPlayerObject::positionChanged);
-    connect(mediaPlayer, SIGNAL(metaDataChanged(const QString &, const QVariant &)), this, SLOT(metaDataChanged(const QString &, const QVariant &)));
-    connect(mediaPlayer, &QMediaPlayer::mediaStatusChanged, this, &QtMediaPlayerObject::onMediaStatusChanged);
-    connect(mediaPlayer, &QMediaPlayer::bufferStatusChanged, this, &QtMediaPlayerObject::bufferingProgress);
-    connect(mediaPlayer, &QMediaPlayer::videoAvailableChanged, this, &QtMediaPlayerObject::videoAvailableChanged);
-    connect(mediaPlayer, SIGNAL(error(QMediaPlayer::Error error)), SLOT(displayErrorMessage(QMediaPlayer::Error error)));
+    connect(mediaPlayer, &QMediaPlayer::durationChanged,
+            this, &QtMediaPlayerObject::durationChanged);
+    connect(mediaPlayer, &QMediaPlayer::positionChanged,
+            this, &QtMediaPlayerObject::positionChanged);
+    connect(mediaPlayer, SIGNAL(metaDataChanged(const QString &, const QVariant &)),
+            this, SLOT(metaDataChanged(const QString &, const QVariant &)));
+    connect(mediaPlayer, &QMediaPlayer::mediaStatusChanged,
+            this, &QtMediaPlayerObject::onMediaStatusChanged);
+    connect(mediaPlayer, &QMediaPlayer::bufferStatusChanged,
+            this, &QtMediaPlayerObject::bufferingProgress);
+    connect(mediaPlayer, &QMediaPlayer::videoAvailableChanged,
+            this, &QtMediaPlayerObject::videoAvailableChanged);
+    connect(mediaPlayer, SIGNAL(availabilityChanged(QMultimedia::AvailabilityStatus)),
+            this, SLOT(availabilityChanged(QMultimedia::AvailabilityStatus)));
+    connect(mediaPlayer, SIGNAL(error(QMediaPlayer::Error)),
+            SLOT(displayErrorMessage(QMediaPlayer::Error)));
+
     return SDK::PLUGIN_OBJECT_RESULT_OK;
 }
 
@@ -389,7 +466,9 @@ SDK::AspectRatio yasem::QtMediaPlayerObject::getAspectRatio()
 QList<AudioLangInfo> yasem::QtMediaPlayerObject::getAudioLanguages()
 {
     STUB();
-    return QList<AudioLangInfo>();
+    QList<AudioLangInfo> list;
+    list.append(AudioLangInfo(0, "", ""));
+    return list;
 }
 
 void yasem::QtMediaPlayerObject::setAudioLanguage(int index)
