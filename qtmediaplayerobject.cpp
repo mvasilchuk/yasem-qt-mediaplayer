@@ -19,12 +19,14 @@ QtMediaPlayerObject::QtMediaPlayerObject(SDK::Plugin* plugin):
 
 QtMediaPlayerObject::~QtMediaPlayerObject()
 {
-    deinit();
+    STUB();
+
+    if(m_graphics_view)
+        m_graphics_view->deleteLater();
+    if(m_video_widget)
+        m_video_widget->deleteLater();
     if(mediaPlayer)
-    {
-        mediaPlayer->setParent(NULL);
         mediaPlayer->deleteLater();
-    }
 }
 
 void QtMediaPlayerObject::parent(QWidget *parent)
@@ -63,7 +65,7 @@ bool QtMediaPlayerObject::mediaPlay(const QString &url)
 
     m_graphics_view->setAutoFillBackground(true);
 
-    playList = new QMediaPlaylist();
+    playList = new QMediaPlaylist(mediaPlayer);
     playList->addMedia(QMediaContent(QUrl(newUrl)));
     playList->setCurrentIndex(1);
     mediaPlayer->setPlaylist(playList);
@@ -345,7 +347,7 @@ SDK::PluginObjectResult yasem::QtMediaPlayerObject::init()
     m_graphics_view->setRenderHints(QPainter::Antialiasing | QPainter::SmoothPixmapTransform);
     m_graphics_view->setHorizontalScrollBarPolicy(Qt::ScrollBarAlwaysOff);
     m_graphics_view->setVerticalScrollBarPolicy(Qt::ScrollBarAlwaysOff);
-    m_graphics_view->setScene(new QGraphicsScene());
+    m_graphics_view->setScene(new QGraphicsScene(m_graphics_view));
     m_graphics_view->scene()->addItem(m_video_widget);
 
     //hide();

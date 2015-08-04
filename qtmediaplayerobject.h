@@ -9,6 +9,7 @@
 #include <QGraphicsVideoItem>
 #include <QGraphicsView>
 #include <QGraphicsScene>
+#include <QSharedPointer>
 
 namespace yasem
 {
@@ -47,11 +48,11 @@ public:
     virtual void raise();
 
 protected:
-    QMediaPlaylist *playList;
+    QMediaPlaylist* playList;
     QGraphicsVideoItem* m_video_widget;
-    QMediaPlayer *mediaPlayer;
+    QMediaPlayer* mediaPlayer;
     SDK::MediaPlayingState playerState;
-    QGraphicsView *m_graphics_view;
+    QGraphicsView* m_graphics_view;
 
 protected slots:
     void durationChanged(qint64 duration);
