@@ -343,7 +343,7 @@ SDK::PluginObjectResult yasem::QtMediaPlayerObject::init()
     mediaPlayer->setVideoOutput(m_video_widget);
 
     m_graphics_view = new QGraphicsView();
-    //m_graphics_view->setStyleSheet("background: black");
+    m_graphics_view->setStyleSheet("background: black");
     m_graphics_view->setRenderHints(QPainter::Antialiasing | QPainter::SmoothPixmapTransform);
     m_graphics_view->setHorizontalScrollBarPolicy(Qt::ScrollBarAlwaysOff);
     m_graphics_view->setVerticalScrollBarPolicy(Qt::ScrollBarAlwaysOff);
