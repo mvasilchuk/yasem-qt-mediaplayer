@@ -24,8 +24,12 @@ HEADERS +=\
     qtmediaplayer_global.h \
     qtcustomvideowidget.h \
     qtplayerplugin.h \
-    qtmediaplayerobject.h \
+    qtmediaplayerobject.h
+
+win32: {
+HEADERS +=\
     $${SDK_DIR}/mediaplayer.h
+}
 
 #LIBS        += -L/home/max/Dropbox/projects/yasem/vlc-qt/build/prefix/lib/ -lvlc-qt -lvlc-qt-widgets
 
