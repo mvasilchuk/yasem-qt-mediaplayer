@@ -459,7 +459,7 @@ void yasem::QtMediaPlayerObject::setAspectRatio(SDK::AspectRatio mode)
     STUB();
 }
 
-SDK::AspectRatio yasem::QtMediaPlayerObject::getAspectRatio()
+SDK::AspectRatio yasem::QtMediaPlayerObject::getAspectRatio() const
 {
     STUB();
     return SDK::ASPECT_RATIO_AUTO;

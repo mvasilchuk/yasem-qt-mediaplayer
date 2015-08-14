@@ -93,7 +93,7 @@ public:
     void setVolume(int vol);
     bool isVisible() const;
     void setAspectRatio(SDK::AspectRatio mode);
-    SDK::AspectRatio getAspectRatio();
+    SDK::AspectRatio getAspectRatio() const;
     QList<AudioLangInfo> getAudioLanguages();
     void setAudioLanguage(int index);
     void setBrightness(int brightness);
