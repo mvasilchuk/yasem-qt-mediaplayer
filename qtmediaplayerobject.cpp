@@ -31,12 +31,6 @@ QtMediaPlayerObject::~QtMediaPlayerObject()
 
 void QtMediaPlayerObject::parent(QWidget *parent)
 {
-    m_video_widget->setParent(parent);
-    //mediaPlayer->setParent(parent);
-}
-
-QWidget *QtMediaPlayerObject::parent()
-{
     m_graphics_view->setParent(parent);
 }
 
@@ -56,7 +50,7 @@ bool QtMediaPlayerObject::mediaPlay(const QString &url)
     if(newUrl.startsWith("/"))
         newUrl = QString("file://").append(newUrl);
 
-    m_graphics_view->setAutoFillBackground(true);
+    //m_graphics_view->setAutoFillBackground(true);
 
     playList = new QMediaPlaylist(mediaPlayer);
     playList->addMedia(QMediaContent(QUrl(newUrl)));
@@ -114,7 +108,11 @@ void QtMediaPlayerObject::hide()
 void QtMediaPlayerObject::rect(const QRect &rect)
 {
     STUB() << rect;
-    m_graphics_view->setGeometry(rect);
+    // FIXME: If either width or height has ever been set to 0 QGraphicsView will never show picture
+    // anymore (at least on Linux).
+    // I don't know why it happens and there is a chance the bug is somewhere else.
+    if(rect.height() != 0 && rect.width() != 0)
+        m_graphics_view->setGeometry(rect);
     m_graphics_view->setSceneRect(0, 0, rect.width(), rect.height());
     m_video_widget->setSize(QSize(rect.width(), rect.height()));
 }
@@ -336,7 +334,7 @@ SDK::PluginObjectResult yasem::QtMediaPlayerObject::init()
     mediaPlayer->setVideoOutput(m_video_widget);
 
     m_graphics_view = new QGraphicsView();
-    m_graphics_view->setStyleSheet("background: black");
+    //m_graphics_view->setStyleSheet("background: black");
     m_graphics_view->setRenderHints(QPainter::Antialiasing | QPainter::SmoothPixmapTransform);
     m_graphics_view->setHorizontalScrollBarPolicy(Qt::ScrollBarAlwaysOff);
     m_graphics_view->setVerticalScrollBarPolicy(Qt::ScrollBarAlwaysOff);
