@@ -112,9 +112,19 @@ void QtMediaPlayerObject::rect(const QRect &rect)
     // anymore (at least on Linux).
     // I don't know why it happens and there is a chance the bug is somewhere else.
     if(rect.height() != 0 && rect.width() != 0)
+    {
         m_graphics_view->setGeometry(rect);
-    m_graphics_view->setSceneRect(0, 0, rect.width(), rect.height());
-    m_video_widget->setSize(QSize(rect.width(), rect.height()));
+        m_graphics_view->setSceneRect(0, 0, rect.width(), rect.height());
+        m_video_widget->setSize(QSize(rect.width(), rect.height()));
+    }
+    else
+    {
+        QWidget* par = m_graphics_view->parentWidget();
+        if(par)
+        {
+            m_graphics_view->setGeometry(par->geometry().width() / 2, par->geometry().height() / 2, 10, 10);
+        }
+    }
 }
 
 QRect QtMediaPlayerObject::rect() const
@@ -334,7 +344,7 @@ SDK::PluginObjectResult yasem::QtMediaPlayerObject::init()
     mediaPlayer->setVideoOutput(m_video_widget);
 
     m_graphics_view = new QGraphicsView();
-    //m_graphics_view->setStyleSheet("background: black");
+    m_graphics_view->setStyleSheet("background: black");
     m_graphics_view->setRenderHints(QPainter::Antialiasing | QPainter::SmoothPixmapTransform);
     m_graphics_view->setHorizontalScrollBarPolicy(Qt::ScrollBarAlwaysOff);
     m_graphics_view->setVerticalScrollBarPolicy(Qt::ScrollBarAlwaysOff);
