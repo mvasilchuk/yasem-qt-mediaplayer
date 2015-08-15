@@ -37,18 +37,11 @@ void QtMediaPlayerObject::parent(QWidget *parent)
 
 QWidget *QtMediaPlayerObject::parent()
 {
-    return m_graphics_view->parentWidget();
-}
-
-void QtMediaPlayerObject::widget(QWidget *videoWidget)
-{
-    //this->m_video_widget = qobject_cast<QtCustomVideoWidget*>(videoWidget);
-    //Q_ASSERT(this->m_video_widget != 0);
+    m_graphics_view->setParent(parent);
 }
 
 QWidget *QtMediaPlayerObject::widget() const
 {
-    //Q_ASSERT(this->m_video_widget);
     return m_graphics_view;
 }
 
@@ -102,13 +95,13 @@ bool QtMediaPlayerObject::mediaStop()
 
 bool QtMediaPlayerObject::mediaReset()
 {
+    STUB();
     return true;
 }
 
 void QtMediaPlayerObject::show()
 {
     STUB();
-    //videoWidget->setVisible(true);
     widget()->show();
 }
 
@@ -170,11 +163,13 @@ bool QtMediaPlayerObject::state(SDK::MediaPlayingState state)
 
 void QtMediaPlayerObject::move(int x, int y)
 {
+    STUB() << x << y;
     widget()->move(x, y);
 }
 
 void QtMediaPlayerObject::raise()
 {
+    STUB();
     widget()->raise();
 }
 
@@ -270,8 +265,6 @@ void QtMediaPlayerObject::onMediaStatusChanged(QMediaPlayer::MediaStatus status)
             break;
         }
     }
-
-
 }
 
 void QtMediaPlayerObject::bufferingProgress(int bufferingProgress)
@@ -347,10 +340,8 @@ SDK::PluginObjectResult yasem::QtMediaPlayerObject::init()
     m_graphics_view->setRenderHints(QPainter::Antialiasing | QPainter::SmoothPixmapTransform);
     m_graphics_view->setHorizontalScrollBarPolicy(Qt::ScrollBarAlwaysOff);
     m_graphics_view->setVerticalScrollBarPolicy(Qt::ScrollBarAlwaysOff);
-    m_graphics_view->setScene(new QGraphicsScene(m_graphics_view));
+    m_graphics_view->setScene(new QGraphicsScene());
     m_graphics_view->scene()->addItem(m_video_widget);
-
-    //hide();
 
     connect(mediaPlayer, &QMediaPlayer::durationChanged,
             this, &QtMediaPlayerObject::durationChanged);
@@ -386,7 +377,7 @@ int yasem::QtMediaPlayerObject::getAudioPID() const
 
 void yasem::QtMediaPlayerObject::setAudioPID(int pid)
 {
-    STUB();
+    STUB() << pid;
 }
 
 int yasem::QtMediaPlayerObject::getLoop() const
@@ -397,7 +388,7 @@ int yasem::QtMediaPlayerObject::getLoop() const
 
 void yasem::QtMediaPlayerObject::setLoop(int loop)
 {
-    STUB();
+    STUB() << loop;
 }
 
 bool yasem::QtMediaPlayerObject::isMute() const
@@ -456,7 +447,7 @@ bool yasem::QtMediaPlayerObject::isVisible() const
 
 void yasem::QtMediaPlayerObject::setAspectRatio(SDK::AspectRatio mode)
 {
-    STUB();
+    STUB() << mode;
 }
 
 SDK::AspectRatio yasem::QtMediaPlayerObject::getAspectRatio() const
@@ -475,12 +466,12 @@ QList<AudioLangInfo> yasem::QtMediaPlayerObject::getAudioLanguages()
 
 void yasem::QtMediaPlayerObject::setAudioLanguage(int index)
 {
-    STUB();
+    STUB() << index;
 }
 
 void yasem::QtMediaPlayerObject::setBrightness(int brightness)
 {
-    STUB();
+    STUB() << brightness;
 }
 
 int yasem::QtMediaPlayerObject::getBrightness() const
@@ -491,7 +482,7 @@ int yasem::QtMediaPlayerObject::getBrightness() const
 
 void yasem::QtMediaPlayerObject::setContrast(int contrast)
 {
-    STUB();
+    STUB() << contrast;
 }
 
 int yasem::QtMediaPlayerObject::getContrast() const
@@ -502,7 +493,7 @@ int yasem::QtMediaPlayerObject::getContrast() const
 
 void yasem::QtMediaPlayerObject::setSaturation(int saturation)
 {
-    STUB();
+    STUB() << saturation;
 }
 
 int yasem::QtMediaPlayerObject::getSaturation() const

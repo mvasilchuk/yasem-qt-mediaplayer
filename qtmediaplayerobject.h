@@ -25,15 +25,13 @@ public:
 public:
 
     virtual void parent(QWidget* parent);
-    virtual QWidget* parent();
 
-    virtual void widget(QWidget* m_video_widget);
     virtual QWidget* widget() const;
-    bool mediaPlay(const QString &url);
-    bool mediaContinue();
-    bool mediaPause();
-    bool mediaStop();
-    bool mediaReset();
+    virtual bool mediaPlay(const QString &url);
+    virtual bool mediaContinue();
+    virtual bool mediaPause();
+    virtual bool mediaStop();
+    virtual bool mediaReset();
 
     virtual void show();
     virtual void hide();
@@ -41,8 +39,8 @@ public:
     virtual QRect rect() const;
     virtual bool isVisible();
 
-    SDK::MediaPlayingState state();
-    bool state(SDK::MediaPlayingState state);
+    virtual SDK::MediaPlayingState state();
+    virtual bool state(SDK::MediaPlayingState state);
 
     virtual void move(int x, int y);
     virtual void raise();
