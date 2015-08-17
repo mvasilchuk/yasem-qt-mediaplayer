@@ -188,7 +188,7 @@ void QtMediaPlayerObject::durationChanged(qint64 duration)
 
 void QtMediaPlayerObject::positionChanged(qint64 position)
 {
-    STUB() << "Position changed:" << position;
+    //STUB() << "Position changed:" << position;
 }
 
 void QtMediaPlayerObject::metaDataChanged(const QString &key, const QVariant &value)
