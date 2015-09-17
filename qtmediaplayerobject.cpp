@@ -66,24 +66,24 @@ bool QtMediaPlayerObject::mediaPlay(const QString &url)
 bool QtMediaPlayerObject::mediaContinue()
 {
     STUB();
-    mediaPlayer->play();
     state(SDK::PlayingState);
+    mediaPlayer->play();
     return true;
 }
 
 bool QtMediaPlayerObject::mediaPause()
 {
     STUB();
-    mediaPlayer->pause();
     state(SDK::PausedState);
+    mediaPlayer->pause();
     return true;
 }
 
 bool QtMediaPlayerObject::mediaStop()
 {
     STUB();
-    mediaPlayer->stop();
     state(SDK::StoppedState);
+    mediaPlayer->stop();
     return true;
 }
 
@@ -226,6 +226,7 @@ void QtMediaPlayerObject::metaDataChanged(const QString &key, const QVariant &va
         m_media_info.title = value.toString();
     else if(key == "encoder")
         m_media_info.encoder = value.toString();
+
 }
 
 void QtMediaPlayerObject::onMediaStatusChanged(QMediaPlayer::MediaStatus status)
@@ -242,10 +243,12 @@ void QtMediaPlayerObject::onMediaStatusChanged(QMediaPlayer::MediaStatus status)
         case QMediaPlayer::BufferedMedia:
         {
             emit statusChanged(SDK::BufferedMedia);
+            emit statusChanged(SDK::LoadedMedia);
             break;
         }
         case QMediaPlayer::LoadedMedia:
         {
+            emit statusChanged(SDK::LoadedMedia);
             break;
         }
         case QMediaPlayer::StalledMedia:
@@ -317,7 +320,8 @@ void QtMediaPlayerObject::availabilityChanged(QMultimedia::AvailabilityStatus av
 
 void QtMediaPlayerObject::displayErrorMessage(QMediaPlayer::Error error)
 {
-    STUB() << "Error" << error << ":" << mediaPlayer->errorString();
+    STUB() << "Error:" << error << ":" << qPrintable(mediaPlayer->errorString());
+
     emit stopped();
 }
 
@@ -339,11 +343,15 @@ SDK::PluginObjectResult yasem::QtMediaPlayerObject::init()
 {
     STUB();
     mediaPlayer = new QMediaPlayer(this, QMediaPlayer::VideoSurface);
+    mediaPlayer->setObjectName("mediaPlayer");
+
     m_video_widget = new QGraphicsVideoItem();
+    m_video_widget->setObjectName("m_video_widget (QGraphicsVideoItem)");
     m_video_widget->setAspectRatioMode(Qt::KeepAspectRatio);
     mediaPlayer->setVideoOutput(m_video_widget);
 
     m_graphics_view = new QGraphicsView();
+    m_graphics_view->setObjectName("m_graphics_view (QGraphicsView)");
     m_graphics_view->setStyleSheet("background: black");
     m_graphics_view->setRenderHints(QPainter::Antialiasing | QPainter::SmoothPixmapTransform);
     m_graphics_view->setHorizontalScrollBarPolicy(Qt::ScrollBarAlwaysOff);
