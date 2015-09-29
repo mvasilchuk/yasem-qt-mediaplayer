@@ -527,3 +527,9 @@ QPoint yasem::QtMediaPlayerObject::getWidgetPos() const
 {
     return QPoint();
 }
+
+
+void yasem::QtMediaPlayerObject::setParentWidget(QWidget *parent)
+{
+    widget()->setParent(parent);
+}

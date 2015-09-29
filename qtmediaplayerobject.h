@@ -102,6 +102,10 @@ public:
     int getSaturation() const;
     MediaMetadata getMediaMetadata();
     QPoint getWidgetPos() const;
+
+    // MediaPlayer interface
+public:
+    void setParentWidget(QWidget *parent);
 };
 
 }
